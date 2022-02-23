@@ -6,10 +6,16 @@ If this tool saves you time, please consider making a donation towards the conti
 Extract translatable (ngx-translate) strings and save as a JSON or Gettext pot file.
 Merges with existing strings if the output file already exists.
 
+## Fork
+
+Add custom project specific changes
+- search also for ntranslate
+- doesn't make implicit flatten when parsing json format (because of nested plurals)
+
 ## Install
 Install the package in your project:
 
-`npm install @biesbjerg/ngx-translate-extract --save-dev`
+`npm install @farin/ngx-translate-extract --save-dev`
 
 Add a script to your project's `package.json`:
 ```json

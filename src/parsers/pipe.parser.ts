@@ -17,7 +17,7 @@ import { ParserInterface } from './parser.interface';
 import { TranslationCollection } from '../utils/translation.collection';
 import { isPathAngularComponent, extractComponentInlineTemplate } from '../utils/utils';
 
-const TRANSLATE_PIPE_NAME = 'translate';
+const TRANSLATE_PIPE_NAMES = ['translate', 'ntranslate'];
 
 export class PipeParser implements ParserInterface {
 	public extract(source: string, filePath: string): TranslationCollection | null {
@@ -55,7 +55,7 @@ export class PipeParser implements ParserInterface {
 
 		if (node?.attributes) {
 			const translateableAttributes = node.attributes.filter((attr: TmplAstTextAttribute) => {
-				return attr.name === TRANSLATE_PIPE_NAME;
+				return TRANSLATE_PIPE_NAMES.includes(attr.name);
 			});
 			ret = [...ret, ...translateableAttributes];
 		}
@@ -148,7 +148,7 @@ export class PipeParser implements ParserInterface {
 	}
 
 	protected expressionIsOrHasBindingPipe(exp: any): exp is BindingPipe {
-		if (exp.name && exp.name === TRANSLATE_PIPE_NAME) {
+		if (exp.name && TRANSLATE_PIPE_NAMES.includes(exp.name)) {
 			return true;
 		}
 		if (exp.exp && exp.exp instanceof BindingPipe) {

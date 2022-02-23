@@ -21,9 +21,15 @@ export class JsonCompiler implements CompilerInterface {
 
 	public parse(contents: string): TranslationCollection {
 		let values: any = JSON.parse(stripBOM(contents));
-		if (this.isNamespacedJsonFormat(values)) {
-			values = flatten(values);
-		}
+		/* do not make implicit flatten because of custom plurals
+			"foo": {
+				"one": "One day"
+				"others": "{{ n }} days"
+			}
+		*/
+		// if (this.isNamespacedJsonFormat(values)) {
+		// 	values = flatten(values);
+		// }
 		return new TranslationCollection(values);
 	}
 
