@@ -13,7 +13,7 @@ import {
 	findConstructorDeclaration
 } from '../utils/ast-helpers.js';
 
-const TRANSLATE_SERVICE_TYPE_REFERENCE = 'TranslateService';
+const TRANSLATE_SERVICE_TYPE_REFERENCES = ['TranslateService', 'LanguageService'];
 const TRANSLATE_SERVICE_METHOD_NAMES = ['get', 'instant', 'stream'];
 
 export class ServiceParser implements ParserInterface {
@@ -50,15 +50,22 @@ export class ServiceParser implements ParserInterface {
 		if (!constructorDeclaration) {
 			return [];
 		}
-		const paramName = findMethodParameterByType(constructorDeclaration, TRANSLATE_SERVICE_TYPE_REFERENCE);
-		return findMethodCallExpressions(constructorDeclaration, paramName, TRANSLATE_SERVICE_METHOD_NAMES);
+		const expressions: CallExpression[] = []
+		TRANSLATE_SERVICE_TYPE_REFERENCES.forEach(ref => {
+			const paramName = findMethodParameterByType(constructorDeclaration, ref);
+			expressions.push(...findMethodCallExpressions(constructorDeclaration, paramName, TRANSLATE_SERVICE_METHOD_NAMES));
+		})
+		return expressions
 	}
 
 	protected findPropertyCallExpressions(classDeclaration: ClassDeclaration): CallExpression[] {
-		const propName: string = findClassPropertyByType(classDeclaration, TRANSLATE_SERVICE_TYPE_REFERENCE);
-		if (!propName) {
-			return [];
-		}
-		return findPropertyCallExpressions(classDeclaration, propName, TRANSLATE_SERVICE_METHOD_NAMES);
+		const expressions: CallExpression[] = []
+		TRANSLATE_SERVICE_TYPE_REFERENCES.forEach(ref => {
+			const propName: string = findClassPropertyByType(classDeclaration, ref);
+			if (propName) {
+				expressions.push(...findPropertyCallExpressions(classDeclaration, propName, TRANSLATE_SERVICE_METHOD_NAMES));
+			}
+		})
+		return expressions;
 	}
 }
