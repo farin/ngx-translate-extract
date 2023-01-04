@@ -18,23 +18,6 @@ export function getNamedImports(node: Node, moduleName: string): NamedImports[] 
 	return tsquery<NamedImports>(node, query);
 }
 
-export function getNamedImportAlias(node: Node, moduleName: string, importName: string): string | null {
-	const [namedImportNode] = getNamedImports(node, moduleName);
-	if (!namedImportNode) {
-		return null;
-	}
-
-	const query = `ImportSpecifier:has(Identifier[name="${importName}"]) > Identifier`;
-	const identifiers = tsquery<Identifier>(namedImportNode, query);
-	if (identifiers.length === 1) {
-		return identifiers[0].text;
-	}
-	if (identifiers.length > 1) {
-		return identifiers[identifiers.length - 1].text;
-	}
-	return null;
-}
-
 export function findClassDeclarations(node: Node): ClassDeclaration[] {
 	const query = 'ClassDeclaration';
 	return tsquery<ClassDeclaration>(node, query);
